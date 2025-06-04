@@ -4,7 +4,7 @@ import WordCard from '../../components/Card';
 
 const DefinitionsArea = ({ title, availableDefinitionCards }) => {
   return (
-    <div className='fixed bottom-0 h-[300px] rounded-t-2xl bg-white p-5 w-full'>
+    <div className='fixed bottom-0 h-[300px] md:w-4xl rounded-t-2xl bg-white p-5 w-full'>
       <h2 className='text-2xl font-bold text-amber-950 mb-6 text-center'>
         {title}
       </h2>

@@ -197,7 +197,7 @@ function Game() {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className='min-h-screen bg-gray-800 text-white flex flex-col items-center relative w-full h-dvh bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10'>
+      <div className='min-h-screen   bg-gray-800 text-white flex flex-col items-center relative w-full m-auto h-dvh bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10 md:w-4xl'>
         <header className='mb-10 text-center'>
           <h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
             Word Slot Challenge

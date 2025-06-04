@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import './App.css';
-import Button3D from './components/Button';
-import WordCard from './components/Card';
 import Splash from './pages/Splash';
 import Game from './pages/Game';
 

@@ -15,7 +15,8 @@ const WordSlot = ({ slotData, placedDefinitionCardDetails }) => {
         content={slotData.content}
         pairId={slotData.pairId}
         cardType='word'
-        isMatched={slotData.isCorrect} // Reflects correctness after confirmation
+        isMatched={slotData.isCorrect}
+        isDisabledDrag={true} // Reflects correctness after confirmation
         // This word card is not the primary draggable for matching in this design
       />
 

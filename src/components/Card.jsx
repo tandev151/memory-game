@@ -32,7 +32,7 @@ const WordCard = ({
   } = useDraggable({
     id: id,
     data: { id, pairId, type: cardType, content },
-    disabled: isMatched // Disable dragging if matched
+    disabled: isMatched || isDisabledDrag // Disable dragging if matched
   });
 
   const { setNodeRef: setDroppableNodeRef, isOver: isCurrentlyOverMe } =
