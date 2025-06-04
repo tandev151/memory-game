@@ -85,36 +85,61 @@ function Game() {
 
     if (!active || !over) return;
 
+    const draggedDefinitionId = active.id; // The ID of the definition card being dragged
     const activeIsDefinition = active.data.current?.type === 'definition';
     const overIsDropZone = over.data.current?.type === 'definition-dropzone';
 
     if (activeIsDefinition && overIsDropZone) {
-      const definitionIdToPlace = active.id;
-      const targetDropZoneId = over.id; // This is droppableId of the wordSlot
+      const targetSlotDroppableId = over.id; // The droppableId of the target WordSlot's dropzone
 
-      setWordSlots((prevSlots) =>
-        prevSlots.map((slot) => {
-          // 1. If this slot is the target, place the new definition
-          if (slot.droppableId === targetDropZoneId) {
-            // If a different definition was already here, it's now un-placed.
-            // (No explicit action needed here as `availableDefinitionCards` will recalculate)
-            return { ...slot, placedDefinitionId: definitionIdToPlace };
+      setWordSlots((prevSlots) => {
+        // Find the state of the target slot before any changes
+        const targetSlotInitialState = prevSlots.find(
+          (s) => s.droppableId === targetSlotDroppableId
+        );
+        if (!targetSlotInitialState) return prevSlots; // Should not happen normally
+
+        const definitionInitiallyInTargetSlot =
+          targetSlotInitialState.placedDefinitionId;
+
+        // If the dragged item is dropped back into the same slot it was already in (or target already has it), no change.
+        if (definitionInitiallyInTargetSlot === draggedDefinitionId) {
+          return prevSlots;
+        }
+
+        // Find the state of the source slot (where the dragged definition came from, if any)
+        const sourceSlotInitialState = prevSlots.find(
+          (s) => s.placedDefinitionId === draggedDefinitionId
+        );
+        const sourceSlotDroppableId = sourceSlotInitialState
+          ? sourceSlotInitialState.droppableId
+          : null;
+
+        // If dragging from one slot to itself (which shouldn't really happen if over.id is different, but as a safe check)
+        if (sourceSlotDroppableId === targetSlotDroppableId) {
+          return prevSlots;
+        }
+
+        return prevSlots.map((slot) => {
+          // 1. Is this the target slot? It gets the dragged definition.
+          if (slot.droppableId === targetSlotDroppableId) {
+            return { ...slot, placedDefinitionId: draggedDefinitionId };
           }
-          // 2. If this slot *previously* held the definition we are now placing, clear it.
-          // (Handles moving a definition from one slot to another)
-          if (
-            slot.placedDefinitionId === definitionIdToPlace &&
-            slot.droppableId !== targetDropZoneId
-          ) {
-            return { ...slot, placedDefinitionId: null };
+
+          // 2. Is this the source slot (where the dragged definition originated)?
+          //    It gets the definition that was initially in the target slot (the swap part).
+          if (slot.droppableId === sourceSlotDroppableId) {
+            return {
+              ...slot,
+              placedDefinitionId: definitionInitiallyInTargetSlot
+            };
           }
+
+          // Otherwise, the slot is not directly involved in this specific swap
           return slot;
-        })
-      );
+        });
+      });
     }
-    // Optional: Handle dragging a definition card *out* of a slot and back to the definition area
-    // This would require the DefinitionsArea to also be a useDroppable target.
-    // If `over.id` corresponds to DefinitionsArea, find the slot that had `active.id` and set its `placedDefinitionId = null`.
   };
 
   const handleConfirmResults = () => {
@@ -174,31 +199,29 @@ function Game() {
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className='min-h-screen bg-gray-800 text-white flex flex-col items-center relative w-full h-dvh bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10'>
         <header className='mb-10 text-center'>
-          <h1 className='text-4xl md:text-5xl font-bold tracking-tight'>
+          <h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
             Word Slot Challenge
-            <div className='mt-2 flex flex-col items-center space-y-4'>
-              {gamePhase === 'placing' && (
-                <Button
-                  label='Confirm Results'
-                  onClick={handleConfirmResults}
-                />
-              )}
-              {gamePhase === 'results' && (
-                <>
-                  <p className='text-xl'>Results are in! Check the borders.</p>
-                  <Button
-                    label='Play Again'
-                    onClick={resetGame}
-                    className=' text-lg bg-gradient-to-br from-pink-500 to-orange-500 before:bg-orange-700 focus:ring-pink-300'
-                  />
-                </>
-              )}
-            </div>
           </h1>
           <p className='text-lg text-gray-400 mt-2'>
             Drag definitions to the slots below each word.
           </p>
         </header>
+
+        <div className='flex flex-col items-center space-y-4 h-[100px]'>
+          {gamePhase === 'placing' && (
+            <Button label='GRADE' onClick={handleConfirmResults} />
+          )}
+          {gamePhase === 'results' && (
+            <>
+              <Button
+                label='PLAY AGAIN'
+                onClick={resetGame}
+                className=' text-lg bg-gradient-to-br from-pink-500 to-orange-500 before:bg-orange-700 focus:ring-pink-300'
+              />
+              <p className='text-xl'>Results are in! Check the borders.</p>
+            </>
+          )}
+        </div>
 
         <div className='w-full max-w-6xl mb-8'>
           <h2 className='text-2xl font-semibold text-center mb-4'>
