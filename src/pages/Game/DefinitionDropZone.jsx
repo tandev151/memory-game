@@ -32,8 +32,7 @@ const DefinitionDropZone = ({
   return (
     <div
       ref={setNodeRef}
-      className={`h-[100px] w-full p-2 border-2 border-dashed rounded-lg
-                  flex justify-center items-center transition-colors duration-200
+      className={`h-[100px] w-full p-2 border-2 border-dashed rounded-lg flex justify-center items-center transition-colors duration-200
                   ${borderColor}
                   ${isOver && canAcceptDrop ? 'bg-blue-100' : ''}
                   ${isCorrect === true ? 'bg-green-100' : ''}
