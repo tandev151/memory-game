@@ -104,7 +104,7 @@ const WordCard = ({
       >
         {/* Front Face */}
         <div className='absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center'>
-          <h2 className='text-xl font-bold'>{frontText}</h2>
+          <h2 className='text-lg font-bold'>{frontText}</h2>
           {/* {!word && !frontContent && (
             <p className='text-sm'>(Hover for a subtle 3D effect)</p>
           )} */}
@@ -115,7 +115,7 @@ const WordCard = ({
 
         {/* Back Face */}
         <div className='absolute inset-0 w-full h-full rounded-xl bg-gradient-to-br from-green-500 to-teal-600 p-6 text-white [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-center items-center'>
-          <p className='text-lg font-semibold'>{backText}</p>
+          <p className='text-md font-semibold'>{backText}</p>
           {/* {definition && isFlipped && (
             <p className='text-sm mt-4'>(Click to see word)</p>
           )} */}
