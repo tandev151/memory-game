@@ -17,7 +17,6 @@ const WordCard = ({
   frontContent,
   backContent,
   isOver, // Passed from useDroppable in the parent list (or its own if self-dropping)
-  style: customStyle, // For external positioning like in a grid
   isTriggeredHandlerFlip = false,
   isDisabledDrag
 }) => {
@@ -77,7 +76,7 @@ const WordCard = ({
       {...listeners}
       {...attributes}
       className={cn(
-        'group min-w-[80px] w-full h-20 [perspective:1000px] cursor-pointer',
+        'group min-w-[80px] w-full h-20 [perspective:1000px] cursor-pointer touch-none',
         className
       )}
       onClick={(e) => {
