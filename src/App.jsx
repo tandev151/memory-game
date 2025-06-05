@@ -1,13 +1,17 @@
-import { useState } from 'react';
 import Splash from './pages/Splash';
 import Game from './pages/Game';
+import { useStore } from './useStore';
+import { IN_GAME, START } from './contants';
 
 function App() {
-  const [step, setStep] = useState(0);
+  const { state } = useStore((state) => state);
 
-  const STEP_MODE = [<Splash onStart={() => setStep(1)} />, <Game />];
+  const stages = {
+    [START]: <Splash />,
+    [IN_GAME]: <Game />
+  };
 
-  return STEP_MODE[step];
+  return stages[state];
 }
 
 export default App;

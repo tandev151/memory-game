@@ -8,7 +8,8 @@ import {
 } from '@dnd-kit/core';
 import WordSlot from './WordSlot';
 import DefinitionsArea from './DefinitionsArea';
-import Button from '../../components/Button'; // Assuming you have this from before
+import Button from '../../components/Button';
+import { GAME_STATE_PLACING, GAME_STATE_RESULT } from '../../contants';
 
 const PATTERN = {
   // Previous simpler words (can be kept or replaced)
@@ -49,10 +50,10 @@ const generateDroppableId = (pairId, index) => `dropzone-${pairId}-${index}`;
 function Game() {
   const [wordSlots, setWordSlots] = useState([]);
   const [allDefinitionCards, setAllDefinitionCards] = useState([]); // Master list
-  const [gamePhase, setGamePhase] = useState('placing'); // 'placing' | 'results'
+  const [gamePhase, setGamePhase] = useState(GAME_STATE_PLACING); // GAME_STATE_PLACING | GAME_STATE_RESULT
 
   useEffect(() => {
-    if (gamePhase === 'placing') {
+    if (gamePhase === GAME_STATE_PLACING) {
       initialGame();
     }
   }, [gamePhase]);
@@ -95,7 +96,7 @@ function Game() {
   // For now, this just shows unplaced and unconfirmed ones.
 
   const handleDragEnd = (event) => {
-    if (gamePhase === 'results') return; // Don't allow changes after confirmation
+    if (gamePhase === GAME_STATE_RESULT) return; // Don't allow changes after confirmation
 
     const { active, over } = event;
 
@@ -159,7 +160,7 @@ function Game() {
   };
 
   const handleConfirmResults = () => {
-    setGamePhase('results');
+    setGamePhase(GAME_STATE_RESULT);
     setWordSlots((prevSlots) =>
       prevSlots.map((slot) => {
         if (!slot.placedDefinitionId) {
@@ -190,7 +191,7 @@ function Game() {
   };
 
   const resetGame = () => {
-    setGamePhase('placing');
+    setGamePhase(GAME_STATE_PLACING);
   };
 
   return (
@@ -206,10 +207,10 @@ function Game() {
         </header>
 
         <div className='flex flex-col items-center space-y-4 h-[100px]'>
-          {gamePhase === 'placing' && (
+          {gamePhase === GAME_STATE_PLACING && (
             <Button label='GRADE' onClick={handleConfirmResults} />
           )}
-          {gamePhase === 'results' && (
+          {gamePhase === GAME_STATE_RESULT && (
             <>
               <Button
                 label='PLAY AGAIN'

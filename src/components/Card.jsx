@@ -97,7 +97,7 @@ const WordCard = ({
         {/* Front Face */}
         <div
           className={cn(
-            'absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center',
+            'absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center',
             frontClassName
           )}>
           <h2 className='text-md font-bold'>{frontText}</h2>

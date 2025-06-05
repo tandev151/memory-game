@@ -3,3 +3,9 @@ export const PATTERN_1 = {
   Tomato: 'Ca chua',
   Tomata: 'Khoai tay'
 };
+
+export const GAME_STATE_PLACING = 'placing';
+export const GAME_STATE_RESULT = 'result';
+
+export const START = 'start';
+export const IN_GAME = 'in-game';
