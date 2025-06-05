@@ -52,6 +52,12 @@ function Game() {
   const [gamePhase, setGamePhase] = useState('placing'); // 'placing' | 'results'
 
   useEffect(() => {
+    if (gamePhase === 'placing') {
+      initialGame();
+    }
+  }, [gamePhase]);
+
+  const initialGame = () => {
     const newWordSlots = Object.entries(PATTERN).map(([key, value], index) => ({
       wordId: generateWordId(key, index),
       content: key,
@@ -73,8 +79,7 @@ function Game() {
 
     setWordSlots(newWordSlots);
     setAllDefinitionCards(newDefinitionCards.sort(() => Math.random() - 0.5)); // Shuffle definitions
-  }, []);
-
+  };
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 10 }
@@ -185,30 +190,12 @@ function Game() {
   };
 
   const resetGame = () => {
-    const newWordSlots = initialWordPairs.map((pair, index) => ({
-      wordId: generateWordId(pair.pairId, index),
-      content: pair.word,
-      pairId: pair.pairId,
-      droppableId: generateDroppableId(pair.pairId, index),
-      placedDefinitionId: null,
-      isCorrect: null
-    }));
-
-    const newDefinitionCards = initialWordPairs.map((pair, index) => ({
-      id: generateDefinitionId(pair.pairId, index),
-      content: pair.definition,
-      pairId: pair.pairId,
-      type: 'definition',
-      isCorrect: null
-    }));
-    setWordSlots(newWordSlots);
-    setAllDefinitionCards(newDefinitionCards.sort(() => Math.random() - 0.5));
     setGamePhase('placing');
   };
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className='min-h-screen   bg-gray-800 text-white flex flex-col items-center relative w-full m-auto h-dvh bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10 md:w-4xl'>
+      <div className='min-h-screen bg-gray-800 text-white flex flex-col items-center relative w-full bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10 md:w-4xl'>
         <header className='mb-10 text-center'>
           <h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
             Word Slot Challenge
@@ -238,7 +225,7 @@ function Game() {
           <h2 className='text-2xl font-semibold text-center mb-4'>
             Words & Slots
           </h2>
-          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-h-[400px] overflow-y-auto'>
+          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-h-[400px] overflow-y-auto border p-2 rounded-xl'>
             {wordSlots.map((slot) => {
               const placedDefDetails = slot.placedDefinitionId
                 ? allDefinitionCards.find(

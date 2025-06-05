@@ -8,7 +8,7 @@ const WordCard = ({
   id,
   content,
   className,
-  // This will be the word or definition text
+  frontClassName,
   pairId,
   cardType, // 'word' or 'definition'
   isMatched,
@@ -32,12 +32,11 @@ const WordCard = ({
     disabled: isMatched || isDisabledDrag // Disable dragging if matched
   });
 
-  const { setNodeRef: setDroppableNodeRef, isOver: isCurrentlyOverMe } =
-    useDroppable({
-      id: id,
-      data: { id, pairId, type: cardType, content },
-      disabled: isMatched
-    });
+  const { setNodeRef: setDroppableNodeRef } = useDroppable({
+    id: id,
+    data: { id, pairId, type: cardType, content },
+    disabled: isMatched
+  });
 
   // Combine refs if the same node is draggable and droppable
   const setNodeRef = (node) => {
@@ -74,22 +73,17 @@ const WordCard = ({
       {...listeners}
       {...attributes}
       className={cn(
-        'group min-w-[80px] w-full h-20 [perspective:1000px] cursor-pointer touch-none',
+        'group min-w-[80px] w-full h-10 [perspective:1000px] cursor-pointer touch-none',
         className
       )}
       onClick={(e) => {
         e.preventDefault();
-        // Prevent flip if it was a drag operation.
-        // dnd-kit might stop propagation for listeners, but a small drag can still trigger click.
-        // A more robust solution might involve checking movement delta if dnd-kit doesn't handle this perfectly.
+
         if (
           transform &&
           (transform.x !== 0 || transform.y !== 0) &&
           isDragging
         ) {
-          // If you want to be very precise, you could store initial click position
-          // and check if it moved significantly before setIsFlipped.
-          // For now, if it's marked as dragging by dnd-kit and has a transform, assume it was a drag.
           return;
         }
         if (!isDragging && isTriggeredFlip) {
@@ -101,8 +95,12 @@ const WordCard = ({
         className={cardClasses} // Subtle hover rotation if not flipped
       >
         {/* Front Face */}
-        <div className='absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center'>
-          <h2 className='text-lg font-bold'>{frontText}</h2>
+        <div
+          className={cn(
+            'absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center',
+            frontClassName
+          )}>
+          <h2 className='text-md font-bold'>{frontText}</h2>
         </div>
 
         {/* Back Face */}

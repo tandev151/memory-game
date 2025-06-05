@@ -16,9 +16,10 @@ const DefinitionsArea = ({ title, availableDefinitionCards }) => {
               id={card.id}
               content={card.content}
               pairId={card.pairId}
-              cardType={card.type} // 'definition'
+              cardType={card.type}
               isMatched={card.isCorrect === true}
               className={''} // Or however you track confirmed correct state
+              frontClassName={'bg-gradient-to-br from-green-500 to-teal-600'}
             />
           ))}
         </div>

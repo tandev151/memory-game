@@ -8,7 +8,7 @@ const WordSlot = ({ slotData, placedDefinitionCardDetails }) => {
   // placedDefinitionCardDetails: actual object of the definition card if placed, or null
 
   return (
-    <div className='p-4 border border-dashed border-white rounded-xl flex flex-col min-h-[160px] gap-y-4'>
+    <div className='p-2 border border-dashed border-white rounded-xl flex flex-col min-h-[100px] gap-y-4'>
       {/* Display the Word Card (non-draggable for matching) */}
       <WordCard
         id={slotData.wordId}
