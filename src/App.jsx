@@ -4,14 +4,14 @@ import { useStore } from './useStore';
 import { IN_GAME, START } from './contants';
 
 function App() {
-  const { state } = useStore((state) => state);
+  const { stage } = useStore((state) => state);
 
   const stages = {
     [START]: <Splash />,
     [IN_GAME]: <Game />
   };
 
-  return stages[state];
+  return stages[stage];
 }
 
 export default App;

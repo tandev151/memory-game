@@ -173,6 +173,7 @@ function Game() {
         return { ...slot, isCorrect: isMatch };
       })
     );
+
     // Also update isCorrect on allDefinitionCards if you want them to reflect this state
     setAllDefinitionCards((prevDefs) =>
       prevDefs.map((def) => {
@@ -194,62 +195,73 @@ function Game() {
     setGamePhase(GAME_STATE_PLACING);
   };
 
+  const numberOfMatchedWords = allDefinitionCards.filter(
+    (card) => card.isCorrect === true
+  ).length;
   return (
-    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <div className='min-h-screen bg-gray-800 text-white flex flex-col items-center relative w-full bg-gradient-to-br from-blue-300 to-green-200 p-4 md:p-10 md:w-4xl'>
-        <header className='mb-10 text-center'>
-          <h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
-            Word Slot Challenge
-          </h1>
-          <p className='text-lg text-gray-400 mt-2'>
-            Drag definitions to the slots below each word.
-          </p>
-        </header>
+    <div className='bg-gradient-to-br from-blue-300 to-green-200 w-full'>
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <div className='min-h-screen text-white flex flex-col items-center relative m-auto w-full p-4 md:p-10 md:w-4xl'>
+          <header className='mb-3 text-center'>
+            <h1 className='text-3xl md:text-4xl font-bold tracking-tight'>
+              Word Slot Challenge
+            </h1>
+            <p className='text-md text-black mt-2'>
+              Drag definitions to the slots below each word.
+            </p>
+          </header>
 
-        <div className='flex flex-col items-center space-y-4 h-[100px]'>
-          {gamePhase === GAME_STATE_PLACING && (
-            <Button label='GRADE' onClick={handleConfirmResults} />
-          )}
-          {gamePhase === GAME_STATE_RESULT && (
-            <>
-              <Button
-                label='PLAY AGAIN'
-                onClick={resetGame}
-                className=' text-lg bg-gradient-to-br from-pink-500 to-orange-500 before:bg-orange-700 focus:ring-pink-300'
-              />
-              <p className='text-xl'>Results are in! Check the borders.</p>
-            </>
-          )}
-        </div>
+          <div className='flex flex-col items-center space-y-2 h-[120px]'>
+            {gamePhase === GAME_STATE_PLACING && (
+              <Button label='GRADE' onClick={handleConfirmResults} />
+            )}
 
-        <div className='w-full max-w-6xl mb-8'>
-          <h2 className='text-2xl font-semibold text-center mb-4'>
-            Words & Slots
-          </h2>
-          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-h-[400px] overflow-y-auto border p-2 rounded-xl'>
-            {wordSlots.map((slot) => {
-              const placedDefDetails = slot.placedDefinitionId
-                ? allDefinitionCards.find(
-                    (def) => def.id === slot.placedDefinitionId
-                  )
-                : null;
-              return (
-                <WordSlot
-                  key={slot.wordId}
-                  slotData={slot}
-                  placedDefinitionCardDetails={placedDefDetails}
+            {gamePhase === GAME_STATE_RESULT && (
+              <>
+                <Button
+                  label='PLAY AGAIN'
+                  onClick={resetGame}
+                  className='bg-gradient-to-br from-pink-500 to-orange-500 before:bg-orange-700 focus:ring-pink-300'
                 />
-              );
-            })}
+                <p className='text-sm text-black text-center'>
+                  {numberOfMatchedWords > 0
+                    ? `You have ${numberOfMatchedWords} correct word${
+                        numberOfMatchedWords === 1 ? '' : 's'
+                      }.`
+                    : 'No correct words.'}{' '}
+                  You can flip the card to check the answer
+                  {numberOfMatchedWords !== 1 ? 's' : ''}.
+                </p>
+              </>
+            )}
           </div>
-        </div>
 
-        <DefinitionsArea
-          title='Available Definitions'
-          availableDefinitionCards={availableDefinitionCards}
-        />
-      </div>
-    </DndContext>
+          <div className='w-full max-w-6xl'>
+            <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 max-h-[400px] overflow-y-auto border p-2 rounded-l-xl scrollbar scrollbar-thin scrollbar-thumb-rounded-md'>
+              {wordSlots.map((slot) => {
+                const placedDefDetails = slot.placedDefinitionId
+                  ? allDefinitionCards.find(
+                      (def) => def.id === slot.placedDefinitionId
+                    )
+                  : null;
+                return (
+                  <WordSlot
+                    key={slot.wordId}
+                    slotData={slot}
+                    placedDefinitionCardDetails={placedDefDetails}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          <DefinitionsArea
+            title='Available Definitions'
+            availableDefinitionCards={availableDefinitionCards}
+          />
+        </div>
+      </DndContext>
+    </div>
   );
 }
 
