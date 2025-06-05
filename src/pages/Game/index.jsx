@@ -10,28 +10,36 @@ import WordSlot from './WordSlot';
 import DefinitionsArea from './DefinitionsArea';
 import Button from '../../components/Button'; // Assuming you have this from before
 
-const initialWordPairs = [
-  {
-    pairId: 'p1',
-    word: 'Ephemeral',
-    definition: 'Lasting for a very short time.'
-  },
-  {
-    pairId: 'p2',
-    word: 'Ubiquitous',
-    definition: 'Present, appearing, or found everywhere.'
-  },
-  {
-    pairId: 'p3',
-    word: 'Serendipity',
-    definition: 'Occurrence of events by chance in a happy way.'
-  },
-  {
-    pairId: 'p4',
-    word: 'Luminous',
-    definition: 'Emitting or reflecting light.'
-  }
-];
+const PATTERN = {
+  // Previous simpler words (can be kept or replaced)
+  hello: 'bonjour',
+  goodbye: 'au revoir',
+  please: "s'il vous plaît",
+  'thank you': 'merci',
+  yes: 'oui',
+  no: 'non',
+  cat: 'chat',
+  dog: 'chien',
+  house: 'maison',
+  love: 'amour'
+
+  // More difficult words
+  // "ephemeral": "éphémère",          // Lasting for a very short time
+  // "ubiquitous": "omniprésent",       // Present, appearing, or found everywhere
+  // "serendipity": "sérendipité",       // The occurrence of events by chance in a happy or beneficial way
+  // "juxtaposition": "juxtaposition",   // The fact of two things being seen or placed close together with contrasting effect
+  // "conundrum": "casse-tête",         // A confusing and difficult problem or question (can also be 'énigme')
+  // "pernicious": "pernicieux",        // Having a harmful effect, especially in a gradual or subtle way
+  // "eloquent": "éloquent",           // Fluent or persuasive in speaking or writing
+  // "vicissitude": "vicissitude",       // A change of circumstances or fortune, typically one that is unwelcome or unpleasant
+  // "ineffable": "ineffable",         // Too great or extreme to be expressed or described in words
+  // "gregarious": "grégaire",         // (Of a person) fond of company; sociable
+  // "idiosyncrasy": "idiosyncrasie",   // A mode of behaviour or way of thought peculiar to an individual
+  // "magnanimous": "magnanime",         // Generous or forgiving, especially towards a rival or less powerful person
+  // "ostensibly": "ostensiblement",    // Apparently or purportedly, but perhaps not actually
+  // "pusillanimous": "pusillanime",     // Showing a lack of courage or determination; timid
+  // "quixotic": "quichottesque"       // Extremely idealistic; unrealistic and impractical
+};
 
 // Helper to generate unique IDs
 const generateWordId = (pairId, index) => `word-${pairId}-${index}`;
@@ -44,21 +52,24 @@ function Game() {
   const [gamePhase, setGamePhase] = useState('placing'); // 'placing' | 'results'
 
   useEffect(() => {
-    const newWordSlots = initialWordPairs.map((pair, index) => ({
-      wordId: generateWordId(pair.pairId, index),
-      content: pair.word,
-      pairId: pair.pairId,
-      droppableId: generateDroppableId(pair.pairId, index),
+    const newWordSlots = Object.entries(PATTERN).map(([key, value], index) => ({
+      wordId: generateWordId(key, index),
+      content: key,
+      definition: value,
+      pairId: key,
+      droppableId: generateDroppableId(key, index),
       placedDefinitionId: null,
       isCorrect: null // null, true, or false
     }));
-    const newDefinitionCards = initialWordPairs.map((pair, index) => ({
-      id: generateDefinitionId(pair.pairId, index),
-      content: pair.definition,
-      pairId: pair.pairId,
-      type: 'definition',
-      isCorrect: null
-    }));
+    const newDefinitionCards = Object.entries(PATTERN).map(
+      ([key, value], index) => ({
+        id: generateDefinitionId(key, index),
+        content: value,
+        pairId: key,
+        type: 'definition',
+        isCorrect: null
+      })
+    );
 
     setWordSlots(newWordSlots);
     setAllDefinitionCards(newDefinitionCards.sort(() => Math.random() - 0.5)); // Shuffle definitions
@@ -229,7 +240,6 @@ function Game() {
           </h2>
           <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-h-[400px] overflow-y-auto'>
             {wordSlots.map((slot) => {
-              console.log({ slot });
               const placedDefDetails = slot.placedDefinitionId
                 ? allDefinitionCards.find(
                     (def) => def.id === slot.placedDefinitionId

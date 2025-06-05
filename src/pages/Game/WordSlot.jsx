@@ -13,6 +13,8 @@ const WordSlot = ({ slotData, placedDefinitionCardDetails }) => {
       <WordCard
         id={slotData.wordId}
         content={slotData.content}
+        definition={slotData.definition}
+        isTriggeredFlip={true}
         pairId={slotData.pairId}
         cardType='word'
         isMatched={slotData.isCorrect}

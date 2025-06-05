@@ -6,7 +6,6 @@ import { CSS } from '@dnd-kit/utilities';
 
 const WordCard = ({
   id,
-  word,
   content,
   className,
   // This will be the word or definition text
@@ -16,8 +15,7 @@ const WordCard = ({
   definition,
   frontContent,
   backContent,
-  isOver, // Passed from useDroppable in the parent list (or its own if self-dropping)
-  isTriggeredHandlerFlip = false,
+  isTriggeredFlip = false,
   isDisabledDrag
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -80,6 +78,7 @@ const WordCard = ({
         className
       )}
       onClick={(e) => {
+        e.preventDefault();
         // Prevent flip if it was a drag operation.
         // dnd-kit might stop propagation for listeners, but a small drag can still trigger click.
         // A more robust solution might involve checking movement delta if dnd-kit doesn't handle this perfectly.
@@ -93,7 +92,7 @@ const WordCard = ({
           // For now, if it's marked as dragging by dnd-kit and has a transform, assume it was a drag.
           return;
         }
-        if (!isDragging && isTriggeredHandlerFlip) {
+        if (!isDragging && isTriggeredFlip) {
           // Only flip if not currently in a drag operation initiated by dnd-kit
           setIsFlipped(!isFlipped);
         }
@@ -104,20 +103,11 @@ const WordCard = ({
         {/* Front Face */}
         <div className='absolute inset-0 w-full min-h-full rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 p-6 text-white [backface-visibility:hidden] flex flex-col justify-center items-center'>
           <h2 className='text-lg font-bold'>{frontText}</h2>
-          {/* {!word && !frontContent && (
-            <p className='text-sm'>(Hover for a subtle 3D effect)</p>
-          )} */}
-          {/* {word && !isFlipped && (
-            <p className='text-sm mt-4'>(Click to see definition)</p>
-          )} */}
         </div>
 
         {/* Back Face */}
         <div className='absolute inset-0 w-full h-full rounded-xl bg-gradient-to-br from-green-500 to-teal-600 p-6 text-white [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-center items-center'>
           <p className='text-md font-semibold'>{backText}</p>
-          {/* {definition && isFlipped && (
-            <p className='text-sm mt-4'>(Click to see word)</p>
-          )} */}
         </div>
       </div>
     </div>
